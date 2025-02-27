@@ -1,0 +1,82 @@
+services:
+  # Product Server    
+  product-server:
+    build:
+      context: ./ProductService
+      target: final
+    # use networks to access internal
+    ports: 
+      - 5013:8080 # Map HTTP port
+      - 7088:8081 # Map HTTPS port
+    environment:
+      # - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:7088;http://+:5013
+      - ConnectionString_ProductDB=Server=product-db;Port=3306;Database=product_db;Uid=root;Pwd=mypass;
+    networks:
+      - backend
+    depends_on: 
+      product-db:
+        condition: service_healthy
+      product-migrator:
+        condition: service_completed_successfully
+    # entrypoint: /bin/sh -c "dotnet ef database update --project /src/ProductService/ProductService.csproj && dotnet ProductService.dll"
+  
+  # Database of Product Server
+  product-db:
+    image: mysql:9.2.0
+    environment:
+      - MYSQL_DATABASE=product_db
+      - MYSQL_ROOT_PASSWORD=mypass
+    ports:
+      - 3306:3306
+    networks:
+      - backend
+
+  # Product Migrator
+  product-migrator:
+    build:
+      context: ./ProductMigrator
+      # target: final
+    environment:
+      - ConnectionString_ProductDB=Server=product-db;Port=3306;Database=product_db;Uid=root;Pwd=mypass;
+    depends_on:
+      product-db:
+        condition: service_healthy
+    restart: "no"
+    networks:
+      - backend
+    
+  # User Server
+  # user-server:
+  #   build:
+  #     context: ./UserService
+  #     target: final
+  #   # use networks to access internal
+  #   ports: 
+  #     - 5050:8090 # Map HTTP port
+  #     - 7157:8091 # Map HTTPS port
+  #   environment:
+  #     # - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_URLS=https://+:7157;http://+:5050
+  #     - ConnectionString_UserDB=Server=user-db;Port=3306;Database=user_db;Uid=root;Pwd=mypass;
+  #   networks:
+  #     - backend
+  #   depends_on: 
+  #     user-db:
+  #       condition: service_healthy
+  #   # entrypoint: /bin/sh -c "dotnet ef database update --project /src/ProductService/ProductService.csproj && dotnet ProductService.dll"
+
+  # # Database of User Server
+  # user-db:
+  #   image: mysql:9.2.0
+  #   environment:
+  #     - MYSQL_DATABASE=user_db
+  #     - MYSQL_ROOT_PASSWORD=mypass
+  #   ports:
+  #     - 3306:3306
+  #   networks:
+  #     - backend
+
+networks:
+  backend:
+    driver: bridge
