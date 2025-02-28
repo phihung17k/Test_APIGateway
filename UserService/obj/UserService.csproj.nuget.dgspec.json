@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\android\\test_dotnet\\Microservices\\UserService\\UserService.csproj": {}
+    "C:\\android\\test_dotnet\\microservice\\Test_APIGateway\\UserService\\UserService.csproj": {}
   },
   "projects": {
-    "C:\\android\\test_dotnet\\Microservices\\UserService\\UserService.csproj": {
+    "C:\\android\\test_dotnet\\microservice\\Test_APIGateway\\UserService\\UserService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\android\\test_dotnet\\Microservices\\UserService\\UserService.csproj",
+        "projectUniqueName": "C:\\android\\test_dotnet\\microservice\\Test_APIGateway\\UserService\\UserService.csproj",
         "projectName": "UserService",
-        "projectPath": "C:\\android\\test_dotnet\\Microservices\\UserService\\UserService.csproj",
+        "projectPath": "C:\\android\\test_dotnet\\microservice\\Test_APIGateway\\UserService\\UserService.csproj",
         "packagesPath": "C:\\Users\\phihu\\.nuget\\packages\\",
-        "outputPath": "C:\\android\\test_dotnet\\Microservices\\UserService\\obj\\",
+        "outputPath": "C:\\android\\test_dotnet\\microservice\\Test_APIGateway\\UserService\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\phihu\\AppData\\Roaming\\NuGet\\NuGet.Config",

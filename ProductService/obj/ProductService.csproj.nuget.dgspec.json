@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\android\\test_dotnet\\Microservices\\ProductService\\ProductService.csproj": {}
+    "C:\\android\\test_dotnet\\microservice\\Test_APIGateway\\ProductService\\ProductService.csproj": {}
   },
   "projects": {
-    "C:\\android\\test_dotnet\\Microservices\\ProductService\\ProductService.csproj": {
+    "C:\\android\\test_dotnet\\microservice\\Test_APIGateway\\ProductService\\ProductService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\android\\test_dotnet\\Microservices\\ProductService\\ProductService.csproj",
+        "projectUniqueName": "C:\\android\\test_dotnet\\microservice\\Test_APIGateway\\ProductService\\ProductService.csproj",
         "projectName": "ProductService",
-        "projectPath": "C:\\android\\test_dotnet\\Microservices\\ProductService\\ProductService.csproj",
+        "projectPath": "C:\\android\\test_dotnet\\microservice\\Test_APIGateway\\ProductService\\ProductService.csproj",
         "packagesPath": "C:\\Users\\phihu\\.nuget\\packages\\",
-        "outputPath": "C:\\android\\test_dotnet\\Microservices\\ProductService\\obj\\",
+        "outputPath": "C:\\android\\test_dotnet\\microservice\\Test_APIGateway\\ProductService\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\phihu\\AppData\\Roaming\\NuGet\\NuGet.Config",

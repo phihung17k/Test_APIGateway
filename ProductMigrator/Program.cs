@@ -19,22 +19,29 @@ using ProductService.Data;
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
-        Console.WriteLine("ProductService.Migration ConnectionString_ProductDB: {0}", context.Configuration.GetConnectionString("ConnectionString_ProductDB"));
+        string connectionString = Environment.GetEnvironmentVariable("ConnectionString_ProductDB") ?? context.Configuration.GetConnectionString("ConnectionString_ProductDB") ?? string.Empty;
+        Console.WriteLine("-------- ProductService.Migration connectionString: {0}", connectionString);
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseMySql(context.Configuration.GetConnectionString("ConnectionString_ProductDB"),
-                new MySqlServerVersion(new Version(9, 2, 0))));
+            options.UseMySql(connectionString, new MySqlServerVersion(new Version(9, 2, 0))));
     })
     .Build();
 
 using (var scope = host.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    ApplicationDbContext? dbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
+    Console.WriteLine("-------- ProductService.Migration ApplicationDbContext: {0}", dbContext);
     //dbContext.Database.EnsureCreated();
-    dbContext.Database.Migrate();
+    dbContext?.Database.Migrate();
 }
 
-host.Run();
-Console.WriteLine("Done");
+
+Task task = host.RunAsync();
+if (await Task.WhenAny(task, Task.Delay(30000)) != task)
+{
+    Console.WriteLine("Done");
+    Environment.Exit(0);
+    //return;
+}
 
 //class ConsoleStartup
 //{

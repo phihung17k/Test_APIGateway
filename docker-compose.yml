@@ -2,7 +2,9 @@ services:
   # Product Server    
   product-server:
     build:
-      context: ./ProductService
+      context: . # Use root path (include docker-compose file)
+      dockerfile: ProductService/Dockerfile
+      # context: ./ProductService # Use path root/ProductService
       target: final
     # use networks to access internal
     ports: 
@@ -28,14 +30,20 @@ services:
       - MYSQL_DATABASE=product_db
       - MYSQL_ROOT_PASSWORD=mypass
     ports:
-      - 3306:3306
+      - 3307:3306
     networks:
       - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
 
   # Product Migrator
   product-migrator:
     build:
-      context: ./ProductMigrator
+      context: . # Use root path (include docker-compose file)
+      dockerfile: ProductMigrator/Dockerfile
+      # context: ./ProductMigrator # Use path root/ProductMigrator
       # target: final
     environment:
       - ConnectionString_ProductDB=Server=product-db;Port=3306;Database=product_db;Uid=root;Pwd=mypass;
@@ -45,6 +53,7 @@ services:
     restart: "no"
     networks:
       - backend
+    stop_grace_period: 60s
     
   # User Server
   # user-server:

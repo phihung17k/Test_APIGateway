@@ -1286,11 +1286,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\android\\test_dotnet\\Microservices\\ProductMigrator\\ProductMigrator.csproj",
+      "projectUniqueName": "C:\\android\\test_dotnet\\microservice\\Test_APIGateway\\ProductMigrator\\ProductMigrator.csproj",
       "projectName": "ProductMigrator",
-      "projectPath": "C:\\android\\test_dotnet\\Microservices\\ProductMigrator\\ProductMigrator.csproj",
+      "projectPath": "C:\\android\\test_dotnet\\microservice\\Test_APIGateway\\ProductMigrator\\ProductMigrator.csproj",
       "packagesPath": "C:\\Users\\phihu\\.nuget\\packages\\",
-      "outputPath": "C:\\android\\test_dotnet\\Microservices\\ProductMigrator\\obj\\",
+      "outputPath": "C:\\android\\test_dotnet\\microservice\\Test_APIGateway\\ProductMigrator\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\phihu\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -1310,8 +1310,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\android\\test_dotnet\\Microservices\\ProductService\\ProductService.csproj": {
-              "projectPath": "C:\\android\\test_dotnet\\Microservices\\ProductService\\ProductService.csproj"
+            "C:\\android\\test_dotnet\\microservice\\Test_APIGateway\\ProductService\\ProductService.csproj": {
+              "projectPath": "C:\\android\\test_dotnet\\microservice\\Test_APIGateway\\ProductService\\ProductService.csproj"
             }
           }
         }

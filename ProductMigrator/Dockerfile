@@ -1,29 +1,24 @@
-# Use .NET SDK to build the project
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER app
+WORKDIR /app
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-
-# Copy only the project file for caching
-COPY "ProductMigrator/ProductMigrator.csproj" "ProductMigrator/"
-RUN dotnet restore "ProductMigrator/ProductMigrator.csproj"
-
-# Copy the entire source code
+COPY ["ProductMigrator/ProductMigrator.csproj", "ProductMigrator/"]
+COPY ["ProductService/ProductService.csproj", "ProductService/"]
+RUN dotnet restore "./ProductMigrator/ProductMigrator.csproj"
 COPY . .
 WORKDIR "/src/ProductMigrator"
+RUN dotnet build "./ProductMigrator.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# Build the migration project
-RUN dotnet build "ProductMigrator.csproj" -c $BUILD_CONFIGURATION -o /app/build
-
-# Publish the migration project
 FROM build AS publish
-RUN dotnet publish "ProductMigrator.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./ProductMigrator.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# Use lightweight .NET runtime to run the migration
-FROM mcr.microsoft.com/dotnet/runtime:8.0 AS final
+FROM base AS final
 WORKDIR /app
-
-# Copy published files from build stage
 COPY --from=publish /app/publish .
-
-# Set the entrypoint to run the migration
 ENTRYPOINT ["dotnet", "ProductMigrator.dll"]
