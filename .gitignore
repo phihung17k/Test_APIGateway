@@ -405,7 +405,7 @@ FodyWeavers.xsd
 bin/
 obj/
 *obj/
-
+**/obj/
 # Common node modules locations
 /node_modules
 /wwwroot/node_modules
@@ -594,3 +594,5 @@ obj/
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,csharp,dotnetcore
 /.vs/
 /.vs/*
+/ProductMigrator/obj/ProductMigrator.csproj.nuget.dgspec.json
+/ProductService/obj/Debug/net8.0/ProductService.assets.cache
