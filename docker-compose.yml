@@ -25,7 +25,6 @@ services:
         condition: service_started
     volumes:
       - test_apigateway_product_data_volume:/app/product
-    # entrypoint: /bin/sh -c "dotnet ef database update --project /src/ProductService/ProductService.csproj && dotnet ProductService.dll"
   
   # Database of Product Server
   product-db:
@@ -62,39 +61,67 @@ services:
     stop_grace_period: 60s
     
   # User Server
-  # user-server:
-  #   build:
-  #     context: ./UserService
-  #     target: final
-  #   # use networks to access internal
-  #   ports: 
-  #     - 5050:8090 # Map HTTP port
-  #     - 7157:8091 # Map HTTPS port
-  #   environment:
-  #     # - ASPNETCORE_ENVIRONMENT=Development
-  #     - ASPNETCORE_URLS=https://+:7157;http://+:5050
-  #     - ConnectionString_UserDB=Server=user-db;Port=3306;Database=user_db;Uid=root;Pwd=mypass;
-  #   networks:
-  #     - backend
-  #   depends_on: 
-  #     user-db:
-  #       condition: service_healthy
-  #   # entrypoint: /bin/sh -c "dotnet ef database update --project /src/ProductService/ProductService.csproj && dotnet ProductService.dll"
+  user-server:
+    build:
+      context: .
+      dockerfile: UserService/Dockerfile
+      target: final
+    ports: 
+      - 5050:8090
+      - 7157:8091
+    environment:
+      # - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:8091;http://+:8090
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=mypass
+      - ConnectionString_UserDB=Server=user-db;Port=3306;Database=user_db;Uid=root;Pwd=mypass;
+    networks:
+      - backend
+    depends_on: 
+      user-db:
+        condition: service_healthy
+      user-migrator:
+        condition: service_started
+    volumes:
+      - test_apigateway_user_data_volume:/app/user
 
-  # # Database of User Server
-  # user-db:
-  #   image: mysql:9.2.0
-  #   environment:
-  #     - MYSQL_DATABASE=user_db
-  #     - MYSQL_ROOT_PASSWORD=mypass
-  #   ports:
-  #     - 3306:3306
-  #   networks:
-  #     - backend
+  # Database of User Server
+  user-db:
+    image: mysql:9.2.0
+    environment:
+      - MYSQL_DATABASE=user_db
+      - MYSQL_ROOT_PASSWORD=mypass
+    ports:
+      - 3308:3306
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+    volumes:
+      - test_apigateway_user_data_volume:/var/lib/mysql
+
+  # User Migrator
+  user-migrator:
+    build:
+      context: .
+      dockerfile: UserMigrator/Dockerfile
+    environment:
+      - ConnectionString_UserDB=Server=user-db;Port=3306;Database=user_db;Uid=root;Pwd=mypass;
+    depends_on:
+      user-db:
+        condition: service_healthy
+    restart: "no"
+    networks:
+      - backend
+    stop_grace_period: 60s
 
 networks:
   backend:
     driver: bridge
 volumes:
   test_apigateway_product_data_volume:
-    external: true  
+    external: true
+  test_apigateway_user_data_volume:
+    external: true
