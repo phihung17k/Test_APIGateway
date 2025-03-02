@@ -7,15 +7,10 @@
 - Build images:
 	+ product: `docker build -t product_image -f ProductService/Dockerfile .`
 	+ user: `docker build -t user_image -f UserService/Dockerfile .`
-	+ migrator: `docker build -t product_migrator -f ProductMigrator/Dockerfile .`
 
 - Run container:
 	+ product_server: `docker run --rm -dp 8080:8080 -p 8081:8081 --name product_server product_image`
 	+ user_server: `docker run --rm -dp 8090:8090 -p 8091:8091 --name user_server user_image`
-	+ migrator_server: `docker run --name migrator product_migrator`
-
-- Run migration:
-	+ Check: `docker exec -it product_server dotnet list package`
 	
 ## With docker compose
 - `docker compose up -d --build`
