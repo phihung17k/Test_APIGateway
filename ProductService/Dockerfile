@@ -28,5 +28,6 @@ RUN dotnet publish "./ProductService.csproj" -c $BUILD_CONFIGURATION -o /app/pub
 
 FROM base AS final
 WORKDIR /app
+COPY "https/aspnetapp.pfx" "https/"
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "ProductService.dll"]

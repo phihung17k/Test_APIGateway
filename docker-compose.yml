@@ -12,7 +12,9 @@ services:
       - 7088:8081 # Map HTTPS port
     environment:
       # - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:7088;http://+:5013
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080 # https and http ports are exposed in Docker
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=mypass
       - ConnectionString_ProductDB=Server=product-db;Port=3306;Database=product_db;Uid=root;Pwd=mypass;
     networks:
       - backend
@@ -20,7 +22,9 @@ services:
       product-db:
         condition: service_healthy
       product-migrator:
-        condition: service_completed_successfully
+        condition: service_started
+    volumes:
+      - test_apigateway_product_data_volume:/app/product
     # entrypoint: /bin/sh -c "dotnet ef database update --project /src/ProductService/ProductService.csproj && dotnet ProductService.dll"
   
   # Database of Product Server
@@ -37,6 +41,8 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       retries: 5
+    volumes:
+      - test_apigateway_product_data_volume:/var/lib/mysql  # Persist MySQL data
 
   # Product Migrator
   product-migrator:
@@ -89,3 +95,6 @@ services:
 networks:
   backend:
     driver: bridge
+volumes:
+  test_apigateway_product_data_volume:
+    external: true  

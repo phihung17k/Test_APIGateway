@@ -16,3 +16,6 @@
 
 - Run migration:
 	+ Check: `docker exec -it product_server dotnet list package`
+	
+## With docker compose
+- `docker compose up -d --build`
