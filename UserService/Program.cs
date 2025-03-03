@@ -7,9 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<IUserServices, UserServices>();
-
+string connectionString = Environment.GetEnvironmentVariable("ConnectionString_UserDB") ?? builder.Configuration.GetConnectionString("ConnectionString_UserDB") ?? string.Empty;
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString: builder.Configuration.GetConnectionString("UserDB"), serverVersion: new MySqlServerVersion(new Version(9, 2, 0)))
+    options.UseMySql(connectionString: connectionString, serverVersion: new MySqlServerVersion(new Version(9, 2, 0)))
            .LogTo(Console.WriteLine, LogLevel.Debug)
            .EnableSensitiveDataLogging()
            .EnableDetailedErrors()
@@ -25,9 +25,10 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    
 }
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

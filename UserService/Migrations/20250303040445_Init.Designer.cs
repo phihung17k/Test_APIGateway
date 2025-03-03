@@ -11,8 +11,8 @@ using UserService.Data;
 namespace UserService.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250224051147_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250303040445_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

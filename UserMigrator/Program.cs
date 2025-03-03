@@ -21,10 +21,7 @@ using (var scope = host.Services.CreateScope())
     dbContext?.Database.Migrate();
 }
 
+CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
 
-Task task = host.RunAsync();
-if (await Task.WhenAny(task, Task.Delay(30000)) != task)
-{
-    Console.WriteLine("Done");
-    Environment.Exit(0);
-}
+await host.RunAsync(cancellationTokenSource.Token);
+Console.WriteLine("Done");
